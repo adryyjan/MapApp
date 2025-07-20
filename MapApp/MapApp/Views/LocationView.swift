@@ -11,7 +11,7 @@ import MapKit
 struct LocationView: View {
     
     @Environment(LocationVM.self) private var viewModel
-
+    
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
             center: CLLocationCoordinate2D(latitude: 41.8902, longitude: 12.4922),
@@ -19,16 +19,87 @@ struct LocationView: View {
         )
     )
     
+    
+    
+    //    @State private var position: MapCameraPosition = .region(viewModel.mapRegion)
     var body: some View {
         ZStack {
             Map(position: $position)
-                        .ignoresSafeArea()
-                        .onAppear {
-                            position = .region(viewModel.mapRegion)
-                        }
+                .ignoresSafeArea()
+                .onAppear {
+                    position = .region(viewModel.mapRegion)
+                }
+                .onAppear {
+                    position = .region(viewModel.mapRegion)
+                }
+                .onChange(of: viewModel.mapRegion) { newRegion in
+                    position = .region(newRegion)
+                }
+            
+            
+            VStack(spacing: 0) {
+                header
+                    .padding()
+                
+                Spacer()
+                
+            }
         }
     }
 }
+
+extension LocationView {
+    
+    private var header: some View {
+        VStack {
+            Button {
+                viewModel.toggleLocationList()
+            } label: {
+                Text(viewModel.mapLocation.name + ", " + viewModel.mapLocation.cityName)
+                    .font(.title2)
+                    .fontWeight(.bold)
+                    .foregroundStyle(Color.primary)
+                    .frame(height: 55)
+                    .frame(maxWidth: .infinity)
+                    .animation(.none, value: viewModel.mapLocation)
+                    .overlay(alignment: .leading) {
+                        Image(systemName: "arrow.down" )
+                            .font(.headline)
+                            .foregroundStyle(Color.primary)
+                            .padding(.horizontal)
+                            .rotationEffect(Angle(degrees: viewModel.showLocationList ? 180 : 0))
+                    }
+                
+            }
+            
+            if viewModel.showLocationList {
+                LocationsListView()
+                    .scrollContentBackground(.hidden)
+                    .background(.ultraThinMaterial)
+                    .listStyle(.plain)
+            }
+            
+            
+        }
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
+        
+        
+    }
+    
+}
+
+
+extension MKCoordinateRegion: @retroactive Equatable {
+    public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
+        lhs.center.latitude  == rhs.center.latitude &&
+        lhs.center.longitude == rhs.center.longitude &&
+        lhs.span.latitudeDelta  == rhs.span.latitudeDelta && 
+        lhs.span.longitudeDelta == rhs.span.longitudeDelta
+    }
+}
+
 
 #Preview {
     LocationView()

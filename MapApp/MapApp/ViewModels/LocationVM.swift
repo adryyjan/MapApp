@@ -9,7 +9,7 @@ import SwiftUI
 import Observation
 import MapKit
 
-@Observable class LocationVM {
+@Observable class LocationVM  {
 
     var locations: [Location]
     var mapLocation: Location{
@@ -19,6 +19,7 @@ import MapKit
     }
     var mapRegion: MKCoordinateRegion = MKCoordinateRegion()
     let mapSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
+    var showLocationList: Bool = false
     
     init() {
         self.locations = LocationsDataService.locations
@@ -33,5 +34,16 @@ import MapKit
             )
         }
     }
+    func toggleLocationList() {
+        withAnimation(.easeInOut) {
+            self.showLocationList.toggle()
+        }
+    }
+    
+    func showNextLocation(location: Location) {
+        withAnimation(.easeInOut) {
+            mapLocation = location
+            showLocationList = false
+        }
+    }
 }
-
