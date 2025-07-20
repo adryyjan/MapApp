@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import Observation
 
 @main
 struct MapAppApp: App {
+    @State private var viewModel = LocationVM()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LocationView()
+                .environment(viewModel)
         }
+        
     }
 }
