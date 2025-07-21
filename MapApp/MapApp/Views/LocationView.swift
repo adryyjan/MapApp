@@ -10,7 +10,8 @@ import MapKit
 
 struct LocationView: View {
     
-    @Environment(LocationVM.self) private var viewModel
+    @Environment(LocationVM.self) private var viewModel: LocationVM
+
     
     @State private var position: MapCameraPosition = .region(
         MKCoordinateRegion(
@@ -20,7 +21,7 @@ struct LocationView: View {
     )
     
     var body: some View {
-        
+        @Bindable var vm = viewModel
         ZStack {
             mapLayer
                 .ignoresSafeArea()
@@ -41,6 +42,10 @@ struct LocationView: View {
 
             }
         }
+        .sheet(isPresented: $vm.showLocationDetails) {
+            LocationDetailsView(location: vm.mapLocation)
+          }
+
     }
 }
 

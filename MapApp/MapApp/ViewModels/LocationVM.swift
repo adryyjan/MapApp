@@ -20,6 +20,7 @@ import MapKit
     var mapRegion: MKCoordinateRegion = MKCoordinateRegion()
     let mapSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     var showLocationList: Bool = false
+    var showLocationDetails: Bool = false
     
     init() {
         self.locations = LocationsDataService.locations

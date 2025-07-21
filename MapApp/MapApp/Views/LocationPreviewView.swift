@@ -68,7 +68,7 @@ extension LocationPreviewView {
     
     private var learnModeButton: some View {
         Button {
-            print("lick")
+            viewModel.showLocationDetails.toggle()
         } label: {
             Text("Learn more")
                 .font(.headline)
