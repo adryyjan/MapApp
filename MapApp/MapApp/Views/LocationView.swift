@@ -22,21 +22,8 @@ struct LocationView: View {
     var body: some View {
         
         ZStack {
-
-            Map(position: $position){
-                ForEach(viewModel.locations){ location in
-                    Annotation(location.name, coordinate: location.coordinates) {
-                        PinView()
-                            .scaleEffect(viewModel.mapLocation == location ? 1.2 : 0.7)
-                    }
-                }
-            }
-                
+            mapLayer
                 .ignoresSafeArea()
-                .animation(
-                  .easeInOut(duration: 3.0),           // to Twoje 3 sekundy
-                  value: viewModel.     // patrz na tę wartość
-                )
                 .onAppear {
                     position = .region(viewModel.mapRegion)
                 }
@@ -44,24 +31,14 @@ struct LocationView: View {
                     position = .region(viewModel.mapRegion)
                 }
             
-            
             VStack(spacing: 0) {
                 header
                     .padding()
                 
                 Spacer()
                 
-                ZStack {
-                    ForEach(viewModel.locations){ location in
-                        if viewModel.mapLocation == location {
-                            LocationPreviewView(location: location)
-                                .shadow(color: .black.opacity(0.3), radius: 20)
-                                .padding()
-                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                        }
-                        
-                    }
-                }
+            LocationPreview
+
             }
         }
     }
@@ -98,6 +75,39 @@ extension LocationView {
         .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
     }
     
+    private var mapLayer: some View {
+        Map(position: $position){
+            ForEach(viewModel.locations){ location in
+                Annotation(location.name, coordinate: location.coordinates) {
+                    PinView()
+                        .scaleEffect(viewModel.mapLocation == location ? 1.2 : 0.7)
+                        .shadow(radius: 10)
+                        .onTapGesture {
+                                viewModel.showNextLocation(location: location)
+                        }
+                        .animation(
+                            .easeInOut(duration: 0.5),
+                          value: viewModel.mapLocation
+                        )
+                }
+            }
+        }
+    }
+    
+    private var LocationPreview: some View {
+        ZStack {
+            ForEach(viewModel.locations){ location in
+                if viewModel.mapLocation == location {
+                    LocationPreviewView(location: location)
+                        .shadow(color: .black.opacity(0.3), radius: 20)
+                        .padding()
+                        .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                }
+                
+            }
+        }
+    }
+    
 }
 
 
@@ -109,6 +119,7 @@ extension MKCoordinateRegion: @retroactive Equatable {
         lhs.span.longitudeDelta == rhs.span.longitudeDelta
     }
 }
+
 
 
 #Preview {

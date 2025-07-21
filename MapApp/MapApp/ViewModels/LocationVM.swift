@@ -48,7 +48,7 @@ import MapKit
     }
     
     func nextButtonPressed() {
-        withAnimation(.easeInOut(duration: 3.0)) {
+        withAnimation(.easeInOut) {
             guard let currentIndex = locations.firstIndex(of: mapLocation) else {return}
             let nextIndex = (currentIndex + 1) % locations.count
             showNextLocation(location: locations[nextIndex])
