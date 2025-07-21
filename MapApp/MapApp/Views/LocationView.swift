@@ -19,9 +19,6 @@ struct LocationView: View {
         )
     )
     
-    
-    
-    //    @State private var position: MapCameraPosition = .region(viewModel.mapRegion)
     var body: some View {
         ZStack {
             Map(position: $position)
@@ -32,8 +29,8 @@ struct LocationView: View {
                 .onAppear {
                     position = .region(viewModel.mapRegion)
                 }
-                .onChange(of: viewModel.mapRegion) { newRegion in
-                    position = .region(newRegion)
+                .onChange(of: viewModel.mapRegion) {
+                    position = .region(viewModel.mapRegion)
                 }
             
             
@@ -43,6 +40,17 @@ struct LocationView: View {
                 
                 Spacer()
                 
+                ZStack {
+                    ForEach(viewModel.locations){ location in
+                        if viewModel.mapLocation == location {
+                            LocationPreviewView(location: location)
+                                .shadow(color: .black.opacity(0.3), radius: 20)
+                                .padding()
+                                .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                        }
+                        
+                    }
+                }
             }
         }
     }
@@ -80,6 +88,8 @@ extension LocationView {
             }
             
             
+            
+            
         }
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 10))
@@ -95,7 +105,7 @@ extension MKCoordinateRegion: @retroactive Equatable {
     public static func == (lhs: MKCoordinateRegion, rhs: MKCoordinateRegion) -> Bool {
         lhs.center.latitude  == rhs.center.latitude &&
         lhs.center.longitude == rhs.center.longitude &&
-        lhs.span.latitudeDelta  == rhs.span.latitudeDelta && 
+        lhs.span.latitudeDelta  == rhs.span.latitudeDelta &&
         lhs.span.longitudeDelta == rhs.span.longitudeDelta
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import Observation
 import MapKit
 
-@Observable class LocationVM  {
+@Observable final class LocationVM  {
 
     var locations: [Location]
     var mapLocation: Location{
@@ -45,5 +45,11 @@ import MapKit
             mapLocation = location
             showLocationList = false
         }
+    }
+    
+    func nextButtonPressed() {
+        guard let currentIndex = locations.firstIndex(of: mapLocation) else {return}
+        let nextIndex = (currentIndex + 1) % locations.count
+        showNextLocation(location: locations[nextIndex])
     }
 }
