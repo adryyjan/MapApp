@@ -35,15 +35,18 @@ struct LocationView: View {
             VStack(spacing: 0) {
                 header
                     .padding()
+                    .frame(maxWidth: 700)
                 
                 Spacer()
                 
             LocationPreview
+                
 
             }
         }
         .sheet(isPresented: $vm.showLocationDetails) {
             LocationDetailsView(location: vm.mapLocation)
+                
           }
 
     }
@@ -106,6 +109,8 @@ extension LocationView {
                     LocationPreviewView(location: location)
                         .shadow(color: .black.opacity(0.3), radius: 20)
                         .padding()
+                        .frame(maxWidth: 700)
+                        .frame(maxWidth: .infinity)
                         .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                 }
                 
