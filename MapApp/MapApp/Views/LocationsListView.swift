@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Observation
 
 struct LocationsListView: View {
     @Environment(LocationVM.self) private var viewModel
@@ -18,17 +19,16 @@ struct LocationsListView: View {
                 } label: {
                     listRowView(location: location)
                 }
-                    .padding(.vertical,4)
-                    .listRowBackground(Color.clear)
+                .padding(.vertical,4)
+                .listRowBackground(RoundedRectangle(cornerRadius: 10)
+                    .frame(maxWidth: .infinity)
+                    .background(.ultraThinMaterial))
             }
-        
-            
         }
-        
+        .listStyle(.plain)
     }
-        
 }
-    
+
 
 extension LocationsListView {
     private func listRowView(location: Location) -> some View {
@@ -42,13 +42,15 @@ extension LocationsListView {
             }
             VStack(alignment: .leading) {
                 Text(location.name)
+                    .foregroundStyle(.fontPrimary)
                     .font(.headline)
+                    
                 Text(location.cityName)
+                    .foregroundStyle(.fontPrimary)
                     .font(.subheadline)
             }
             .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(.ultraThinMaterial)
     }
 }
 

@@ -48,8 +48,11 @@ import MapKit
     }
     
     func nextButtonPressed() {
-        guard let currentIndex = locations.firstIndex(of: mapLocation) else {return}
-        let nextIndex = (currentIndex + 1) % locations.count
-        showNextLocation(location: locations[nextIndex])
+        withAnimation(.easeInOut(duration: 3.0)) {
+            guard let currentIndex = locations.firstIndex(of: mapLocation) else {return}
+            let nextIndex = (currentIndex + 1) % locations.count
+            showNextLocation(location: locations[nextIndex])
+
+        }
     }
 }

@@ -20,12 +20,23 @@ struct LocationView: View {
     )
     
     var body: some View {
+        
         ZStack {
-            Map(position: $position)
-                .ignoresSafeArea()
-                .onAppear {
-                    position = .region(viewModel.mapRegion)
+
+            Map(position: $position){
+                ForEach(viewModel.locations){ location in
+                    Annotation(location.name, coordinate: location.coordinates) {
+                        PinView()
+                            .scaleEffect(viewModel.mapLocation == location ? 1.2 : 0.7)
+                    }
                 }
+            }
+                
+                .ignoresSafeArea()
+                .animation(
+                  .easeInOut(duration: 3.0),           // to Twoje 3 sekundy
+                  value: viewModel.     // patrz na tę wartość
+                )
                 .onAppear {
                     position = .region(viewModel.mapRegion)
                 }
@@ -77,25 +88,14 @@ extension LocationView {
                             .padding(.horizontal)
                             .rotationEffect(Angle(degrees: viewModel.showLocationList ? 180 : 0))
                     }
-                
             }
-            
             if viewModel.showLocationList {
                 LocationsListView()
-                    .scrollContentBackground(.hidden)
-                    .background(.ultraThinMaterial)
-                    .listStyle(.plain)
             }
-            
-            
-            
-            
         }
         .background(.ultraThinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 10))
         .shadow(color: Color.black.opacity(0.3), radius: 20, x: 0, y: 15)
-        
-        
     }
     
 }
